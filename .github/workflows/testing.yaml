@@ -50,9 +50,11 @@ jobs:
         pip install -r requirements.txt
     - name: PyInstaller build
       working-directory: simpletestprogram
-      run: pyinstaller simpletestprogram.spec
+      run: |
+        pyinstaller simpletestprogram.spec
+        echo "${{ matrix.os }} build on ${{ github.ref }} for ${{ github.event_name }} ${{ github.sha }} job id ${{ github.job }} run id ${{ github.run_id }} actor ${{ github.actor }}" > simpletestprogram/dist/simpletestprogram/artifact.info
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.1.4
       with:
-        name: ${{ matrix.os }} build on ${{ github.ref }} for ${{ github.event_name }} ${{ github.sha }}
+        name: ${{ matrix.os }} build for ${{ github.event_name }} ${{ github.sha }}
         path: simpletestprogram/dist/simpletestprogram
