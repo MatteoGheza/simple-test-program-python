@@ -151,10 +151,9 @@ else:
         [sg.Text("Version "+__version__)]
     ]
 
-window = sg.Window('Simple Test Program', layout)
-logging.debug("window initialized")
-
 def main():
+    window = sg.Window('Simple Test Program', layout)
+    logging.debug("window initialized")
     while True:    
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == 'Cancel':
