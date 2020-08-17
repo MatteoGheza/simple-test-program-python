@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/MatteoGheza/simple-test-program-python/compare/v1.0.0...v1.0.1) (2020-08-17)
+
+
+### Bug Fixes
+
+* **release:** Fix version.py updater ([7ebce32](https://github.com/MatteoGheza/simple-test-program-python/commit/7ebce32779f0c1163a226a6c7cf34df9219ccce0))
+* **release:** Typo in base64 decode code ([bd5306b](https://github.com/MatteoGheza/simple-test-program-python/commit/bd5306b10d6fb2cab89a36bc0b591888f977abee))
+
 # 1.0.0 (2020-08-17)
 
 
