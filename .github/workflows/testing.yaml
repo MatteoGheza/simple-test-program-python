@@ -52,7 +52,7 @@ jobs:
       working-directory: simpletestprogram
       run: |
         pyinstaller simpletestprogram.spec
-        echo "${{ matrix.os }} build on ${{ github.ref }} for ${{ github.event_name }} ${{ github.sha }} job id ${{ github.job }} run id ${{ github.run_id }} actor ${{ github.actor }}" > simpletestprogram/dist/simpletestprogram/artifact.info
+        echo "${{ matrix.os }} build on ${{ github.ref }} for ${{ github.event_name }} ${{ github.sha }} job id ${{ github.job }} run id ${{ github.run_id }} actor ${{ github.actor }}" > dist/simpletestprogram/artifact.info
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.1.4
       with:
