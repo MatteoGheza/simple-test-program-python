@@ -1,0 +1,18 @@
+name: simpletestprogram
+version: '1.0'
+summary: SimpleTestProgram
+description: |
+  A simple test program in python.
+  Developed using new standards, automated build and more.
+confinement: devmode
+base: core18
+parts:
+  simpletestprogram:
+    plugin: python
+    python-version: python3
+    source: simpletestprogram
+    requirements: .
+
+apps:
+  simpletestprogram:
+    command: bin/simpletestprogram
