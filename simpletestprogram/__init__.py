@@ -1,7 +1,8 @@
-from simpletestprogram.version import __version__
+from version import __version__
 import argparse
 import logging
 import os
+from os import path
 import sys
 import json
 import yaml
@@ -51,11 +52,10 @@ sys_info = simpleClass()
 if getattr(sys, 'frozen', False):
         # we are running in a bundle
         sys_info.executed_by = "PyInstaller"
-        bundle_dir = sys._MEIPASS
 else:
         # we are running in a normal Python environment
         sys_info.executed_by = "Directly Python "+platform.python_version()
-        bundle_dir = os.path.dirname(os.path.abspath(__file__))
+bundle_dir = getattr(sys, '_MEIPASS', path.abspath(path.dirname(__file__)))
 
 sys_info.platform_all = platform.platform()
 sys_info.os_system = platform.system()
@@ -136,7 +136,7 @@ if not args.basic: # if script is called with "-b", execute only a base GUI
         [sg.Text('TODO')] #TODO: write tab3 layout
     ]
     layout = [
-        [sg.Image(os.path.join(os.path.dirname(os.path.abspath(__file__)), "res", "pythonlogo.png"))],
+        [sg.Image(os.path.join(bundle_dir, "res", "pythonlogo.png"))],
         [sg.Text("Version "+__version__)],
         [sg.TabGroup([[
             sg.Tab('System info', tab1_layout),
@@ -147,7 +147,7 @@ if not args.basic: # if script is called with "-b", execute only a base GUI
 else:
     logging.info("Basic GUI")
     layout = [
-        [sg.Image(os.path.join(os.path.dirname(os.path.abspath(__file__)), "res", "pythonlogo.png"))],
+        [sg.Image(os.path.join(bundle_dir, "res", "pythonlogo.png"))],
         [sg.Text("Version "+__version__)]
     ]
 
