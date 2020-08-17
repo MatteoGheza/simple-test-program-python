@@ -154,37 +154,41 @@ else:
 window = sg.Window('Simple Test Program', layout)
 logging.debug("window initialized")
 
-while True:    
-    event, values = window.read()
-    if event == sg.WIN_CLOSED or event == 'Cancel':
-        logging.debug("window closed")  
-        break
-    logging.debug(json.dumps(event))
-    logging.debug(json.dumps(values))
-    if values["open_file_input"] and event == "open_file_button":
-        # for open_file, see line 102
-        open_file.path(values["open_file_input"])
-        open_file.status("opening file...")
-        open_file.stat = os.stat(values["open_file_input"])
-        open_file.size(open_file.stat.st_size)
-        open_file.status("ok")
-    if values["save_file_input"] and event == "save_file_button":
-        # for open_file, see line 113
-        save_file.path(values["save_file_input"])
-        save_file.status("writing file...")
-        logging.debug("ext: "+os.path.splitext(values["save_file_input"]))
-        save_file.file = open(values["save_file_input"], "w")
-        file_content = {
-            ".json": sys_info.toJSON(),
-            ".yaml": sys_info.toYAML()
-        }
-        # get file extension, then get (and write to file) the value for the file extension. If no file extension is specified, use default sys_info.toJSON()
-        save_file.file.write(file_content.get(os.path.splitext(values["save_file_input"])[1], sys_info.toJSON()))
-        save_file.file.close()
-        save_file.stat = os.stat(values["save_file_input"])
-        save_file.size(save_file.stat.st_size)
-        save_file.status("ok")
-    if event == "sys_info_copy":
-        pyperclip.copy(sys_info.toJSON())
-        sg.popup_notify("JSON copied successfully", fade_in_duration=100, display_duration_in_ms=4000)
-window.close()
+def main():
+    while True:    
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == 'Cancel':
+            logging.debug("window closed")  
+            break
+        logging.debug(json.dumps(event))
+        logging.debug(json.dumps(values))
+        if values["open_file_input"] and event == "open_file_button":
+            # for open_file, see line 102
+            open_file.path(values["open_file_input"])
+            open_file.status("opening file...")
+            open_file.stat = os.stat(values["open_file_input"])
+            open_file.size(open_file.stat.st_size)
+            open_file.status("ok")
+        if values["save_file_input"] and event == "save_file_button":
+            # for open_file, see line 113
+            save_file.path(values["save_file_input"])
+            save_file.status("writing file...")
+            logging.debug("ext: "+os.path.splitext(values["save_file_input"]))
+            save_file.file = open(values["save_file_input"], "w")
+            file_content = {
+                ".json": sys_info.toJSON(),
+                ".yaml": sys_info.toYAML()
+            }
+            # get file extension, then get (and write to file) the value for the file extension. If no file extension is specified, use default sys_info.toJSON()
+            save_file.file.write(file_content.get(os.path.splitext(values["save_file_input"])[1], sys_info.toJSON()))
+            save_file.file.close()
+            save_file.stat = os.stat(values["save_file_input"])
+            save_file.size(save_file.stat.st_size)
+            save_file.status("ok")
+        if event == "sys_info_copy":
+            pyperclip.copy(sys_info.toJSON())
+            sg.popup_notify("JSON copied successfully", fade_in_duration=100, display_duration_in_ms=4000)
+    window.close()
+
+if __name__ == '__main__':
+    main()
