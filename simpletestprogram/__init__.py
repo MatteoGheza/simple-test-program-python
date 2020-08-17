@@ -1,4 +1,4 @@
-from version import __version__
+from simpletestprogram.version import __version__
 import argparse
 import logging
 import os
@@ -8,7 +8,6 @@ import yaml
 import platform
 import PySimpleGUI as sg
 import pyperclip
-import subprocess
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -34,14 +33,14 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if args.version:
+if args.version: # if script is callled with "-v" flag, print version and exit
     print("Version "+__version__)
     exit()
 
 logging.basicConfig(level=args.log_level)
 logging.info("Version "+__version__)
 
-class simpleClass():
+class simpleClass(): # a simple js-object like class
     def toJSON(self):
         return json.dumps(self, default=lambda i: i.__dict__)
     def toYAML(self):
@@ -70,7 +69,7 @@ sys_info.mac_ver = platform.mac_ver() #for Mac version
 if sys_info.mac_ver == ('', ('', '', ''), ''):
     sys_info.mac_ver = "N/A"
 
-sys_info.win32_ver = platform.win32_ver() #for Mac version
+sys_info.win32_ver = platform.win32_ver() #for Windows version
 if sys_info.win32_ver == ('', ('', '', ''), ''):
     sys_info.win32_ver = "N/A"
 
@@ -78,9 +77,9 @@ sys_info.machine = platform.machine()
 sys_info.uname = platform.uname()
 sys_info.sys_version = platform.version()
 
-logging.info(sys_info.toJSON())
+logging.info(sys_info.toJSON()) # log sysinfo as json
 
-if not args.basic:
+if not args.basic: # if script is called with "-b", execute only a base GUI
     logging.info("Full GUI")
     tab1_layout = [
         [sg.Text("Executed by"),sg.Text(sys_info.executed_by)],
@@ -98,11 +97,27 @@ if not args.basic:
     open_file.path=sg.Text("N/A", key='open_file.path', size=(60,1))
     open_file.size=sg.Text("N/A", key='open_file.size', size=(15,1))
     open_file.status=sg.Text("idle", size=(30,1))
+    # an example pseudo-code
+    # open_file = [
+    #   path = sg.Text,
+    #   size = sg.Text,
+    #   status = sg.Text,
+    #   stat = os.stat(path) see line 158
+    # ]
 
     save_file = simpleClass()
     save_file.path=sg.Text("N/A", key='save_file.path', size=(60,1))
     save_file.size=sg.Text("N/A", key='save_file.size', size=(15,1))
     save_file.status=sg.Text("idle", size=(30,1))
+    # an example pseudo-code
+    # save_file = [
+    #   path = sg.Text,
+    #   size = sg.Text,
+    #   status = sg.Text,
+    #   file = file(path), see line 175
+    #   stat = os.stat(path) see line 182
+    # ]
+
     tab2_layout = [
         [sg.Text("Open file", justification='center', font=("Helvetica", 15))],
         [sg.In(key='open_file_input')],
@@ -118,7 +133,7 @@ if not args.basic:
         [sg.Text("Status"),save_file.status]
     ]
     tab3_layout = [
-        [sg.Text('TODO')]
+        [sg.Text('TODO')] #TODO: write tab3 layout
     ]
     layout = [
         [sg.Image(os.path.join(os.path.dirname(os.path.abspath(__file__)), "res", "pythonlogo.png"))],
@@ -147,12 +162,14 @@ while True:
     logging.debug(json.dumps(event))
     logging.debug(json.dumps(values))
     if values["open_file_input"] and event == "open_file_button":
+        # for open_file, see line 102
         open_file.path(values["open_file_input"])
         open_file.status("opening file...")
         open_file.stat = os.stat(values["open_file_input"])
         open_file.size(open_file.stat.st_size)
         open_file.status("ok")
     if values["save_file_input"] and event == "save_file_button":
+        # for open_file, see line 113
         save_file.path(values["save_file_input"])
         save_file.status("writing file...")
         logging.debug("ext: "+os.path.splitext(values["save_file_input"]))
@@ -161,6 +178,7 @@ while True:
             ".json": sys_info.toJSON(),
             ".yaml": sys_info.toYAML()
         }
+        # get file extension, then get (and write to file) the value for the file extension. If no file extension is specified, use default sys_info.toJSON()
         save_file.file.write(file_content.get(os.path.splitext(values["save_file_input"])[1], sys_info.toJSON()))
         save_file.file.close()
         save_file.stat = os.stat(values["save_file_input"])
