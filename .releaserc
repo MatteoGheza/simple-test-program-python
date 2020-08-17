@@ -23,7 +23,7 @@
         }],
         "@semantic-release/changelog",
         ["@semantic-release/exec", {
-          "prepareCmd": "echo IyBET04nVCB1cGRhdGUgd2l0aCBtYW51YWxseSwgYWx3YXlzIHVzZSByZWxlYXNlIHRyaWdnZXIgZnJvbSBHaXRodWIgQWN0aW9ucy4gU2VlIFJFTEVBU0VTLm1kCiMgTk9OIG1vZGlmaWNhcmUgcXVlc3RvIGZpbGUgbWFudWFsbWVudGUsIHVzZSBzZW1wcmUgaWwgInJlbGVhc2UgdHJpZ2dlciIgZGEgR2l0aHViIEFjdGlvbnMuIEd1YXJkYSBSRUxFQVNFUy5tZAo= | base64 -d > simpletestprogram/version.py && echo __version__ = '${nextRelease.version}' >> simpletestprogram/version.py"
+          "prepareCmd": "echo IyBET04nVCB1cGRhdGUgd2l0aCBtYW51YWxseSwgYWx3YXlzIHVzZSByZWxlYXNlIHRyaWdnZXIgZnJvbSBHaXRodWIgQWN0aW9ucy4gU2VlIFJFTEVBU0VTLm1kCiMgTk9OIG1vZGlmaWNhcmUgcXVlc3RvIGZpbGUgbWFudWFsbWVudGUsIHVzZSBzZW1wcmUgaWwgInJlbGVhc2UgdHJpZ2dlciIgZGEgR2l0aHViIEFjdGlvbnMuIEd1YXJkYSBSRUxFQVNFUy5tZAo= | base64 -d > simpletestprogram/version.py && echo __version__ = \'${nextRelease.version}\' >> simpletestprogram/version.py"
         }],
         ["@semantic-release/git", {
             "assets": ["CHANGELOG.md", "simpletestprogram/version.py"],
