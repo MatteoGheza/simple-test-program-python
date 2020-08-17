@@ -1,15 +1,14 @@
 from version import __version__
-import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
-from PIL import ImageTk, Image
-import json
-import os
-import sys
-import platform
-import pyperclip
 import argparse
 import logging
+import os
+import sys
+import json
+import yaml
+import platform
+import PySimpleGUI as sg
+import pyperclip
+import subprocess
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -43,8 +42,10 @@ logging.basicConfig(level=args.log_level)
 logging.info("Version "+__version__)
 
 class simpleClass():
-  def toJSON(self):
+    def toJSON(self):
         return json.dumps(self, default=lambda i: i.__dict__)
+    def toYAML(self):
+        return yaml.dump(self, explicit_start=True, default_flow_style=False)
 
 sys_info = simpleClass()
 
@@ -78,82 +79,94 @@ sys_info.uname = platform.uname()
 sys_info.sys_version = platform.version()
 
 logging.info(sys_info.toJSON())
-window = tk.Tk()
-window.title("Simple Test Program")
-logging.debug("tk window initialized")
-
-img = ImageTk.PhotoImage(Image.open(os.path.join(bundle_dir, "res", "pythonlogo.png")))
-image = tk.Label(image = img)
-image.pack(side = "top", fill = "both", expand = "yes")
-label = tk.Label(text="Hello from version "+__version__)
-label.pack()
-
-def copySystemInfoCallBack():
-    pyperclip.copy(sys_info.toJSON())
-
-def openFileCallBack():
-    path = filedialog.askopenfilename(title = "Select a file")
-    if path is None:
-        return
-    path_text.set(path)
-    logging.info("File selected: "+str(path))
-    stat = os.stat(path)
-    size_text.set(status.st_size)
-    status_text.set("ok")
-
-def exportSystemInfoCallBack():
-    f = filedialog.asksaveasfile(mode='w', defaultextension=".json", filetypes=(("JSON file", "*.json"),("All Files", "*.*") ))
-    if f is None:
-        return
-    logging.info("File selected")
-    f.write(sys_info.toJSON())
-    f.close()
 
 if not args.basic:
     logging.info("Full GUI")
-    notebook = ttk.Notebook(window)
-    tab1 = ttk.Frame(notebook)
-    notebook.add(tab1, text='System info')
-    tab2 = ttk.Frame(notebook)
-    notebook.add(tab2, text='Read file info')
-    tab3 = ttk.Frame(notebook)
-    notebook.add(tab3, text='List directory')
-    notebook.pack(expand=1, fill="both")
-    ttk.Label(tab1, text="Executed by").grid(column=0, row=0, padx=4)
-    ttk.Label(tab1, text=sys_info.executed_by).grid(column=1, row=0, padx=10)
-    ttk.Label(tab1, text="Platform").grid(column=0, row=1)
-    ttk.Label(tab1, text=sys_info.platform_all).grid(column=1, row=1)
-    ttk.Label(tab1, text="OS System").grid(column=0, row=2)
-    ttk.Label(tab1, text=sys_info.os_system+" "+sys_info.os_release).grid(column=1, row=2)
-    ttk.Label(tab1, text="Linux distro").grid(column=0, row=3)
-    ttk.Label(tab1, text=sys_info.linux_distro).grid(column=1, row=3)
-    ttk.Label(tab1, text="MacOS version").grid(column=0, row=4)
-    ttk.Label(tab1, text=sys_info.mac_ver).grid(column=1, row=4)
-    ttk.Label(tab1, text="win32 version").grid(column=0, row=5)
-    ttk.Label(tab1, text=sys_info.win32_ver).grid(column=1, row=5)
-    ttk.Label(tab1, text="Machine").grid(column=0, row=6)
-    ttk.Label(tab1, text=sys_info.machine).grid(column=1, row=6)
-    ttk.Label(tab1, text="uname").grid(column=0, row=7)
-    ttk.Label(tab1, text=sys_info.uname, wraplength=800).grid(column=1, row=7)
-    ttk.Label(tab1, text="System version").grid(column=0, row=8)
-    ttk.Label(tab1, text=sys_info.sys_version).grid(column=1, row=8)
-    ttk.Button(tab1, text="Copy system info", command=copySystemInfoCallBack).grid(column=0, row=9)
-    ttk.Button(tab1, text="Export system info to file", command=exportSystemInfoCallBack).grid(column=0, row=10)
-    
-    ttk.Button(tab2, text="Open file", command=openFileCallBack).grid(column=0, row=0, rowspan=1)
-    ttk.Label(tab2, text="File path").grid(column=0, row=1, padx=4)
-    path_text = tk.StringVar().set("N/A")
-    ttk.Label(tab2, textvariable=path_text).grid(column=1, row=1, padx=10)
-    ttk.Label(tab2, text="File size").grid(column=0, row=2)
-    size_text = tk.StringVar().set("N/A")
-    ttk.Label(tab2, textvariable=size_text).grid(column=1, row=2)
-    ttk.Label(tab2, text="Status").grid(column=0, row=3)
-    status_text = tk.StringVar().set("N/A")
-    ttk.Label(tab2, textvariable=status_text).grid(column=1, row=3)
+    tab1_layout = [
+        [sg.Text("Executed by"),sg.Text(sys_info.executed_by)],
+        [sg.Text("Platform"),sg.Text(sys_info.platform_all)],
+        [sg.Text("OS System"),sg.Text(sys_info.os_system+" release "+sys_info.os_release)],
+        [sg.Text("Linux distro"),sg.Text(sys_info.linux_distro)],
+        [sg.Text("MacOS version"),sg.Text(sys_info.mac_ver)],
+        [sg.Text("win32 version"),sg.Text(sys_info.win32_ver)],
+        [sg.Text("Machine"),sg.Text(sys_info.machine)],
+        [sg.Text("uname"),sg.Text(sys_info.uname)],
+        [sg.Text("System version"),sg.Text(sys_info.sys_version)],
+        [sg.Button('Copy JSON to clipboard', key="sys_info_copy")]
+    ]
+    open_file = simpleClass()
+    open_file.path=sg.Text("N/A", key='open_file.path', size=(60,1))
+    open_file.size=sg.Text("N/A", key='open_file.size', size=(15,1))
+    open_file.status=sg.Text("idle", size=(30,1))
 
-    ttk.Label(tab3, text="TODO").grid()
+    save_file = simpleClass()
+    save_file.path=sg.Text("N/A", key='save_file.path', size=(60,1))
+    save_file.size=sg.Text("N/A", key='save_file.size', size=(15,1))
+    save_file.status=sg.Text("idle", size=(30,1))
+    tab2_layout = [
+        [sg.Text("Open file", justification='center', font=("Helvetica", 15))],
+        [sg.In(key='open_file_input')],
+        [sg.FileBrowse(target='open_file_input'), sg.OK(key="open_file_button")],
+        [sg.Text("File path"),open_file.path],
+        [sg.Text("File size"),open_file.size],
+        [sg.Text("Status"),open_file.status],
+        [sg.Text("Save file", justification='center', font=("Helvetica", 15))],
+        [sg.In(key='save_file_input')],
+        [sg.FileSaveAs(target='save_file_input'), sg.OK(key="save_file_button")],
+        [sg.Text("File path"),save_file.path],
+        [sg.Text("File size"),save_file.size],
+        [sg.Text("Status"),save_file.status]
+    ]
+    tab3_layout = [
+        [sg.Text('TODO')]
+    ]
+    layout = [
+        [sg.Image(os.path.join(os.path.dirname(os.path.abspath(__file__)), "res", "pythonlogo.png"))],
+        [sg.Text("Version "+__version__)],
+        [sg.TabGroup([[
+            sg.Tab('System info', tab1_layout),
+            sg.Tab('Files and directories', tab2_layout),
+            sg.Tab('Others', tab3_layout)
+        ]])]
+    ]
 else:
     logging.info("Basic GUI")
-logging.debug("tk mainloop")
-window.mainloop()
-logging.debug("tk window closed")
+    layout = [
+        [sg.Image(os.path.join(os.path.dirname(os.path.abspath(__file__)), "res", "pythonlogo.png"))],
+        [sg.Text("Version "+__version__)]
+    ]
+
+window = sg.Window('Simple Test Program', layout)
+logging.debug("window initialized")
+
+while True:    
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Cancel':
+        logging.debug("window closed")  
+        break
+    logging.debug(json.dumps(event))
+    logging.debug(json.dumps(values))
+    if values["open_file_input"] and event == "open_file_button":
+        open_file.path(values["open_file_input"])
+        open_file.status("opening file...")
+        open_file.stat = os.stat(values["open_file_input"])
+        open_file.size(open_file.stat.st_size)
+        open_file.status("ok")
+    if values["save_file_input"] and event == "save_file_button":
+        save_file.path(values["save_file_input"])
+        save_file.status("writing file...")
+        logging.debug("ext: "+os.path.splitext(values["save_file_input"]))
+        save_file.file = open(values["save_file_input"], "w")
+        file_content = {
+            ".json": sys_info.toJSON(),
+            ".yaml": sys_info.toYAML()
+        }
+        save_file.file.write(file_content.get(os.path.splitext(values["save_file_input"])[1], sys_info.toJSON()))
+        save_file.file.close()
+        save_file.stat = os.stat(values["save_file_input"])
+        save_file.size(save_file.stat.st_size)
+        save_file.status("ok")
+    if event == "sys_info_copy":
+        pyperclip.copy(sys_info.toJSON())
+        sg.popup_notify("JSON copied successfully", fade_in_duration=100, display_duration_in_ms=4000)
+window.close()
