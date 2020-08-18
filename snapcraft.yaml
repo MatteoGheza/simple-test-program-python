@@ -10,7 +10,7 @@ parts:
   simpletestprogram:
     plugin: python
     python-version: python3
-    source: simpletestprogram
+    source: .
 
 apps:
   simpletestprogram:
