@@ -14,7 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url=simpletestprogram.__homepage__,
     packages=setuptools.find_packages(),
-    scripts = ['bin/simpletestprogram'],
+    scripts = ['bin/simpletestprogram', 'bin/simpletestprogram.bat'],
     package_data={
         "simpletestprogram": ["res/*.*"],
     },
