@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/MatteoGheza/simple-test-program-python/compare/v1.1.0...v1.1.1) (2020-08-20)
+
+
+### Bug Fixes
+
+* **release:** release.py [skip-ci] ([19d4966](https://github.com/MatteoGheza/simple-test-program-python/commit/19d49663e1b5ab40036d60e86dce18a79d0248ab))
+
 # [1.1.0](https://github.com/MatteoGheza/simple-test-program-python/compare/v1.0.1...v1.1.0) (2020-08-20)
 
 
