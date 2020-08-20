@@ -25,11 +25,11 @@
             "failComment": "This release from branch ${branch.name} had failed due to the following errors:\n- ${errors.map(err => err.message).join('\\n- ')}",
             "assets": [
                 {"path": "build_artifacts/windows-latest.zip", "label": "Windows"},
-                {"path": "build_artifacts/windows-latest_portable/windows-latest_portable.exe", "label": "Windows portable"},
+                {"path": "build_artifacts/windows-latest_portable/windows-latest_portable.exe", "label": "Portable Windows"},
                 {"path": "build_artifacts/ubuntu-latest.zip", "label": "Linux"},
-                {"path": "build_artifacts/ubuntu-latest_portable/ubuntu-latest_portable", "label": "Linux portable"},
+                {"path": "build_artifacts/ubuntu-latest_portable/ubuntu-latest_portable", "label": "Portable Linux"},
                 {"path": "build_artifacts/macos-latest.zip", "label": "MacOS"},
-                {"path": "build_artifacts/macos-latest_portable/macos-latest_portable", "label": "MacOS portable"},
+                {"path": "build_artifacts/macos-latest_portable/macos-latest_portable", "label": "Portable MacOS"},
             ]
         }],
         "@semantic-release/changelog",
