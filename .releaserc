@@ -31,7 +31,7 @@
         }],
         "@semantic-release/changelog",
         ["@semantic-release/exec", {
-          "prepareCmd": "release.sh --step2"
+          "prepareCmd": "python release.py --write --version ${nextRelease.version}"
         }],
         ["@semantic-release/git", {
             "assets": ["CHANGELOG.md", "simpletestprogram/version.py"],
