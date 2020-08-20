@@ -19,7 +19,15 @@
         }],
         ["@semantic-release/github", {
             "successComment": "This ${issue.pull_request ? 'pull request' : 'issue'} is included in version ${nextRelease.version}",
-            "failComment": "This release from branch ${branch.name} had failed due to the following errors:\n- ${errors.map(err => err.message).join('\\n- ')}"
+            "failComment": "This release from branch ${branch.name} had failed due to the following errors:\n- ${errors.map(err => err.message).join('\\n- ')}",
+            "assets": [
+                {"path": "build_artifacts/windows-latest", "label": "Windows"},
+                {"path": "build_artifacts/windows-latest_portable", "label": "Windows portable"},
+                {"path": "build_artifacts/ubuntu-latest", "label": "Linux"},
+                {"path": "build_artifacts/ubuntu-latest_portable", "label": "Linux portable"},
+                {"path": "build_artifacts/macos-latest", "label": "MacOS"},
+                {"path": "build_artifacts/macos-latest_portable", "label": "MacOS portable"},
+            ]
         }],
         "@semantic-release/changelog",
         ["@semantic-release/exec", {

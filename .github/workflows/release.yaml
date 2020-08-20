@@ -45,7 +45,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller
-        pip install -r requirements.txt
+        pip install -R requirements.txt
     - name: PyInstaller build
       working-directory: simpletestprogram
       run: |
@@ -54,12 +54,12 @@ jobs:
     - name: Upload Build
       uses: actions/upload-artifact@v2.1.4
       with:
-        name: ${{ matrix.os }} release build
+        name: ${{ matrix.os }}
         path: simpletestprogram/dist/simpletestprogram
-    - name: Upload Debug Build
+    - name: Upload Portable Build
       uses: actions/upload-artifact@v2.1.4
       with:
-        name: ${{ matrix.os }} portable release build
+        name: ${{ matrix.os }}_portable
         path: simpletestprogram/dist/simpletestprogram_portable*
   release:
     needs: building
@@ -71,7 +71,8 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           path: build_artifacts
-      - run: ls -r build_artifacts
+      - run: ls -R build_artifacts
+      - run: ls -R build_artifacts/*
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
