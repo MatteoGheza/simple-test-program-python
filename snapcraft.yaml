@@ -1,17 +1,26 @@
 name: simpletestprogram
-version: '1.0'
 summary: SimpleTestProgram
 description: |
   A simple test program in python.
   Developed using new standards, automated build and more.
 confinement: devmode
 base: core18
+adopt-info: simpletestprogram
+
 parts:
   simpletestprogram:
     plugin: python
     python-version: python3
     source: .
+    override-pull: |
+      snapcraftctl pull
+      VERSION=$(cat "$SNAPCRAFT_PART_SRC/simpletestprogram/version.py" | grep -o -P "(?<=').*(?=')")
+      snapcraftctl set-version "$VERSION"
 
 apps:
   simpletestprogram:
     command: bin/simpletestprogram
+    plugs:
+      - network
+      - pulseaudio
+      - x11
