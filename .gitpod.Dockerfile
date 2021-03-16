@@ -11,12 +11,10 @@ RUN sudo apt-get -q update \
     libgl1-mesa-dev \
     libglu1-mesa-dev \
     libgstreamer-plugins-base1.0-dev \
-    libgtk-3-dev \
+    python3-tk \
     libnotify-dev \
     libsdl2-dev \
-    libwebkit2gtk-4.0-dev \
     libxtst-dev \
-    libgtk2.0-dev \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # Install wxPython
