@@ -10,7 +10,10 @@ import sys
 import json
 import yaml
 import platform
-import PySimpleGUI as sg
+try:
+    import PySimpleGUI as sg
+except:
+    import PySimpleGUIWx as sg
 import pyperclip
 
 parser = argparse.ArgumentParser()
