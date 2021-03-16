@@ -1,3 +1,5 @@
+FROM gitpod/workspace-full-vnc
+
 USER gitpod
 
 # Install wxPython dependencies
